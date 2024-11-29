@@ -39,7 +39,10 @@
 <div class="flex h-screen">
 	<!-- Sidebar for large screens -->
 	<aside class="bg-secondary hidden w-64 flex-col shadow-2xl md:flex">
-		<nav class="mt-24 flex-1">
+		<div class="flex items-center justify-center pt-8 font-bold">
+			<h3>Poke-Quiz</h3>
+		</div>
+		<nav class="mt-6 flex-1">
 			{#each navItems as item}
 				<a
 					href="#{item.name.toLowerCase().replace(/\s+/g, '-')}"
