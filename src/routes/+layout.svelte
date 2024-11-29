@@ -3,8 +3,10 @@
 	import { ParaglideJS } from '@inlang/paraglide-sveltekit';
 	import '../app.css';
 	let { children } = $props();
+	import { ModeWatcher } from 'mode-watcher';
 </script>
 
 <ParaglideJS {i18n}>
 	{@render children()}
+	<ModeWatcher />
 </ParaglideJS>
