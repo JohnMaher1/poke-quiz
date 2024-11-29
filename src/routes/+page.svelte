@@ -20,6 +20,7 @@
 	} from '$lib/components/ui/sheet';
 	import { Search, Menu, User, LogOut, Settings } from 'lucide-svelte';
 	import ThemeSwitch from '../components/ThemeSwitch.svelte';
+	import Separator from '$lib/components/ui/separator/separator.svelte';
 
 	let isOpen = $state(false);
 
@@ -39,10 +40,11 @@
 <div class="flex h-screen">
 	<!-- Sidebar for large screens -->
 	<aside class="bg-secondary hidden w-64 flex-col shadow-2xl md:flex">
-		<div class="flex items-center justify-center pt-8 font-bold">
+		<div class="flex items-center justify-center pb-[15px] pt-8 font-bold">
 			<h3>Poke-Quiz</h3>
 		</div>
-		<nav class="mt-6 flex-1">
+		<Separator class="w-32 self-center" />
+		<nav class="mt-4 flex-1">
 			{#each navItems as item}
 				<a
 					href="#{item.name.toLowerCase().replace(/\s+/g, '-')}"
