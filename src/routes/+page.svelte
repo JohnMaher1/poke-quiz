@@ -23,7 +23,12 @@
 			<p class="mb-4 text-muted-foreground">
 				{item.description}
 			</p>
-			<Button class="w-40">Start Quiz</Button>
+			<div class="flex items-center justify-between">
+				<Button class="w-40" disabled={item.underConstruction}>Start Quiz</Button>
+				{#if item.underConstruction}
+					<p class="text-muted">Coming Soon!</p>
+				{/if}
+			</div>
 		</div>
 	{/each}
 </div>

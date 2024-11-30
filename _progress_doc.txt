@@ -1,1 +1,20 @@
-This is where the contents of progress is kept. Add stuff
+Ideas to implement:
+
+Currently working on:
+
+QG: 1.
+
+=====================
+Auth and Database (AD)
+=====================
+
+1. Simple OAuth (Github and Google)
+  1.1: Maybe some simple tracking of quiz scores
+
+=====================
+Quizzes and Games (QG)
+=====================  
+
+1. Quiz that displays two pokemon that share a common move
+  1.1: Use pokemon API to find two pokemon that have a move in common and three moves not in common
+  

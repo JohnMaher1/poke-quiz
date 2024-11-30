@@ -1,13 +1,5 @@
 <script lang="ts">
 	import {
-		DropdownMenu,
-		DropdownMenuContent,
-		DropdownMenuItem,
-		DropdownMenuLabel,
-		DropdownMenuSeparator,
-		DropdownMenuTrigger
-	} from '$lib/components/ui/dropdown-menu';
-	import {
 		Sheet,
 		SheetContent,
 		SheetDescription,
@@ -15,10 +7,10 @@
 		SheetTitle,
 		SheetTrigger
 	} from '$lib/components/ui/sheet';
-	import { LogOut, Menu, Settings, User } from 'lucide-svelte';
+	import { Menu } from 'lucide-svelte';
 	import { navItems } from '../static-data/nav-items';
 	import ThemeSwitch from './ThemeSwitch.svelte';
-	import { Avatar, AvatarFallback, AvatarImage } from '$lib/components/ui/avatar';
+	import { goto } from '$app/navigation';
 </script>
 
 <header class="bg-card shadow-sm dark:bg-muted">
@@ -35,13 +27,14 @@
 					</SheetHeader>
 					<nav class="mt-6">
 						{#each navItems as item}
-							<a
-								href="#{item.name.toLowerCase().replace(/\s+/g, '-')}"
-								class="flex items-center py-2"
+							<button
+								onclick={() => goto(item.link)}
+								class="flex items-center py-2 {item.underConstruction &&
+									'pointer-events-none opacity-50'}"
 							>
 								<span class="mr-3 text-xl">{item.icon}</span>
 								{item.name}
-							</a>
+							</button>
 						{/each}
 					</nav>
 				</SheetContent>
@@ -51,7 +44,8 @@
 			<div>
 				<ThemeSwitch />
 			</div>
-			<DropdownMenu>
+			<!-- TODO: Add user login and other things -->
+			<!-- <DropdownMenu>
 				<DropdownMenuTrigger>
 					<Avatar>
 						<AvatarImage class="dark:bg-card" alt="User" />
@@ -74,7 +68,7 @@
 						Log out
 					</DropdownMenuItem>
 				</DropdownMenuContent>
-			</DropdownMenu>
+			</DropdownMenu> -->
 		</div>
 	</div>
 </header>
