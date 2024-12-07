@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button';
 	import { navItems } from '../static-data/nav-items';
 </script>
@@ -24,9 +25,12 @@
 				{item.description}
 			</p>
 			<div class="flex items-center justify-between">
-				<Button class="w-40" disabled={item.underConstruction}>Start Quiz</Button>
 				{#if item.underConstruction}
 					<p class="text-muted">Coming Soon!</p>
+				{:else}
+					<Button onclick={() => goto(item.link)} class="w-40" disabled={item.underConstruction}
+						>Start Quiz</Button
+					>
 				{/if}
 			</div>
 		</div>

@@ -14,8 +14,8 @@
 </script>
 
 <header class="bg-card shadow-sm dark:bg-muted">
-	<div class="flex items-center justify-between p-4">
-		<div class="flex items-center">
+	<div class="flex items-center p-4">
+		<div class="flex items-center pr-2">
 			<Sheet>
 				<SheetTrigger class="md:hidden">
 					<Menu class="h-6 w-6" />
@@ -40,7 +40,8 @@
 				</SheetContent>
 			</Sheet>
 		</div>
-		<div class="flex items-center space-x-4">
+		<button onclick={() => goto('/')}>Home</button>
+		<div class="flex w-full justify-end space-x-4">
 			<div>
 				<ThemeSwitch />
 			</div>
