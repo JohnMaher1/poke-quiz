@@ -1,46 +1,27 @@
 <script lang="ts">
-	import {
-		Sheet,
-		SheetContent,
-		SheetDescription,
-		SheetHeader,
-		SheetTitle,
-		SheetTrigger
-	} from '$lib/components/ui/sheet';
-	import { Menu } from 'lucide-svelte';
-	import { navItems } from '../static-data/nav-items';
-	import ThemeSwitch from './ThemeSwitch.svelte';
 	import { goto } from '$app/navigation';
+	import * as Tooltip from '$lib/components/ui/tooltip';
+	import ThemeSwitch from './ThemeSwitch.svelte';
 </script>
 
-<header class="bg-card shadow-sm dark:bg-muted">
+<header class="bg-card shadow-sm">
 	<div class="flex items-center p-4">
-		<div class="flex items-center pr-2">
-			<Sheet>
-				<SheetTrigger class="md:hidden">
-					<Menu class="h-6 w-6" />
-				</SheetTrigger>
-				<SheetContent side="left">
-					<SheetHeader>
-						<SheetTitle class="text-start">Poke-Quiz Menu</SheetTitle>
-						<SheetDescription class="text-start">Choose your Pokémon challenge!</SheetDescription>
-					</SheetHeader>
-					<nav class="mt-6">
-						{#each navItems as item}
-							<button
-								onclick={() => goto(item.link)}
-								class="flex items-center py-2 {item.underConstruction &&
-									'pointer-events-none opacity-50'}"
-							>
-								<span class="mr-3 text-xl">{item.icon}</span>
-								{item.name}
-							</button>
-						{/each}
-					</nav>
-				</SheetContent>
-			</Sheet>
-		</div>
-		<button onclick={() => goto('/')}>Home</button>
+		<Tooltip.Provider>
+			<Tooltip.Root>
+				<Tooltip.Trigger
+					><button
+						class="flex items-center justify-center pr-2 text-center hover:brightness-125"
+						onclick={() => goto('/')}
+					>
+						<img src="/logo.webp" alt="Poke-Quiz Logo" class="h-12 w-auto rounded-full" />
+					</button></Tooltip.Trigger
+				>
+				<Tooltip.Content>
+					<p>Home</p>
+				</Tooltip.Content>
+			</Tooltip.Root>
+		</Tooltip.Provider>
+
 		<div class="flex w-full justify-end space-x-4">
 			<div>
 				<ThemeSwitch />

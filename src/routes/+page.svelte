@@ -4,9 +4,11 @@
 	import { navItems } from '../static-data/nav-items';
 </script>
 
-<h1 class="text-center text-4xl font-bold">Welcome to Poke-Quiz!</h1>
+<div class="flex w-full justify-center">
+	<h1 class="text-gradient text-center text-4xl">Poke-Quiz!</h1>
+</div>
 <div class="flex w-full items-center justify-center p-4 text-center">
-	<img src="/poke_quiz_logo.jpg" alt="Poke-Quiz Logo" class="h-24 w-auto rounded-full" />
+	<img src="/logo.webp" alt="Poke-Quiz Logo" class="h-24 w-auto rounded-full" />
 </div>
 <p class="mb-12 text-center text-xl">
 	Test your Pokémon knowledge with our exciting quizzes and puzzles!

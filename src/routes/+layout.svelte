@@ -5,13 +5,11 @@
 	import '../app.css';
 	import Footer from '../components/Footer.svelte';
 	import Navbar from '../components/Navbar.svelte';
-	import SideNav from '../components/SideNav.svelte';
 	let { children } = $props();
 </script>
 
 <ParaglideJS {i18n}>
 	<div class="flex h-screen">
-		<SideNav />
 		<div class=" flex flex-1 flex-col overflow-hidden">
 			<Navbar />
 			<main class="flex-1 overflow-y-auto bg-background p-6">
