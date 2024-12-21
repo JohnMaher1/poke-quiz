@@ -4,13 +4,13 @@
 	import ThemeSwitch from './ThemeSwitch.svelte';
 </script>
 
-<header class="bg-card shadow-sm">
+<header class="bg-card shadow-xs">
 	<div class="flex items-center p-4">
 		<Tooltip.Provider>
 			<Tooltip.Root>
 				<Tooltip.Trigger
 					><button
-						class="flex items-center justify-center pr-2 text-center hover:brightness-125"
+						class="flex cursor-pointer items-center justify-center pr-2 text-center hover:brightness-125"
 						onclick={() => goto('/')}
 					>
 						<img src="/logo.webp" alt="Poke-Quiz Logo" class="h-12 w-auto rounded-full" />

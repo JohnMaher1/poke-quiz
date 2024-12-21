@@ -1,6 +1,32 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@config '../tailwind.config.ts';
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@utility bg-gradient {
+  background: var(--gradient);
+}
+
+@utility text-gradient {
+  @apply bg-gradient bg-cover! bg-clip-text! bg-center! font-black leading-none tracking-tighter text-transparent transition-all;
+}
 
 @layer base {
 	:root {
@@ -31,7 +57,7 @@
 		--background: 226 33.15% 5.2%; /* #0a0f1a */
 		--foreground: 226 5.1% 98.25%; /* #f5f7fa */
 
-		--muted: 226 25.5% 19.5%; /* #1a2b3a */
+		--muted: 226 25.5% 35%; /* #1a2b3a */
 		--muted-foreground: 226 5.1% 56.5%; /* #8a9fb2 */
 
 		--popover: 226 54.8% 8.450000000000001%; /* #0d1a33 */
@@ -62,12 +88,12 @@
 }
 
 @layer utilities {
-	.bg-gradient {
-		background: var(--gradient);
-	}
-	.text-gradient {
-		@apply bg-gradient !bg-cover !bg-clip-text !bg-center font-black leading-none tracking-tighter text-transparent transition-all;
-	}
+  @media (prefers-color-scheme: dark) {
+    ::selection {
+      background-color: #1f2937; /* Darker background for dark mode */
+      color: whitesmoke; /* Text stays white in dark mode selection */
+    }
+  }
 }
 
 @layer base {

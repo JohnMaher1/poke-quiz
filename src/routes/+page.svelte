@@ -8,10 +8,10 @@
 	<h1 class="text-gradient text-center text-4xl">Poke-Quiz!</h1>
 </div>
 <div class="flex w-full items-center justify-center p-4 text-center">
-	<img src="/logo.webp" alt="Poke-Quiz Logo" class="h-24 w-auto rounded-full" />
+	<img src="/logo.webp" alt="Poke-Quiz Logo" class="h-24 w-auto rounded-full hover:animate-pulse" />
 </div>
 <p class="mb-12 text-center text-xl">
-	Test your Pokémon knowledge with our exciting quizzes and puzzles!
+	Test your Pokémon knowledge with some exciting quizzes and puzzles!
 </p>
 
 <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
