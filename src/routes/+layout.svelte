@@ -3,21 +3,33 @@
 	import { ParaglideJS } from '@inlang/paraglide-sveltekit';
 	import { ModeWatcher } from 'mode-watcher';
 	import '../app.css';
-	import Footer from '../components/Footer.svelte';
 	import Navbar from '../components/Navbar.svelte';
+
+	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
+	import { browser } from '$app/environment';
+
+	const queryClient = new QueryClient({
+		defaultOptions: {
+			queries: {
+				enabled: browser
+			}
+		}
+	});
 	let { children } = $props();
 </script>
 
-<ParaglideJS {i18n}>
-	<div class="flex h-screen">
-		<div class=" flex flex-1 flex-col overflow-hidden">
-			<Navbar />
-			<main class="bg-background flex-1 overflow-y-auto p-6">
-				{@render children()}
-			</main>
-			<!-- <Footer /> -->
+<QueryClientProvider client={queryClient}>
+	<ParaglideJS {i18n}>
+		<div class="flex h-screen">
+			<div class=" flex flex-1 flex-col overflow-hidden">
+				<Navbar />
+				<main class="bg-background flex-1 overflow-y-auto p-6">
+					{@render children()}
+				</main>
+				<!-- <Footer /> -->
+			</div>
 		</div>
-	</div>
 
-	<ModeWatcher />
-</ParaglideJS>
+		<ModeWatcher />
+	</ParaglideJS>
+</QueryClientProvider>
