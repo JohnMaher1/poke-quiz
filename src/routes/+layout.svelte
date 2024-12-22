@@ -12,10 +12,10 @@
 	<div class="flex h-screen">
 		<div class=" flex flex-1 flex-col overflow-hidden">
 			<Navbar />
-			<main class="flex-1 overflow-y-auto bg-background p-6">
+			<main class="bg-background flex-1 overflow-y-auto p-6">
 				{@render children()}
 			</main>
-			<Footer />
+			<!-- <Footer /> -->
 		</div>
 	</div>
 

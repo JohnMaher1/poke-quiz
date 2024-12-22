@@ -11,21 +11,13 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
-  }
-}
-
-@utility bg-gradient {
-  background: var(--gradient);
-}
-
-@utility text-gradient {
-  @apply bg-gradient bg-cover! bg-clip-text! bg-center! font-black leading-none tracking-tighter text-transparent transition-all;
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--color-gray-200, currentColor);
+	}
 }
 
 @layer base {
@@ -88,12 +80,12 @@
 }
 
 @layer utilities {
-  @media (prefers-color-scheme: dark) {
-    ::selection {
-      background-color: #1f2937; /* Darker background for dark mode */
-      color: whitesmoke; /* Text stays white in dark mode selection */
-    }
-  }
+	@media (prefers-color-scheme: dark) {
+		:not(h1)::selection {
+			background-color: #1f2937; /* Darker background for dark mode */
+			color: whitesmoke; /* Text stays white in dark mode selection */
+		}
+	}
 }
 
 @layer base {
