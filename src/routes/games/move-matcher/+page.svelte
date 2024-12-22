@@ -4,6 +4,7 @@
 	import Skeleton from '$lib/components/ui/skeleton/skeleton.svelte';
 	import { fetchData } from '$lib/http/pokemon-api-service.svelte';
 	import { reactiveQueryArgs } from '$lib/tanstack-query-utils.svelte';
+	import { toPascalCase } from '$lib/text-helpers';
 	import { createQuery } from '@tanstack/svelte-query';
 	import type { Move, Pokemon } from 'pokenode-ts/lib/index.d.ts';
 
@@ -63,7 +64,7 @@
 
 	// To ensure uniqueness
 	function getRandomPokemon(pokemonList: string[], excludePokemon: string): string {
-		let randomPokemon;
+		let randomPokemon: string;
 		if (pokemonList.length === 1) {
 			return pokemonList[0];
 		}
@@ -92,10 +93,13 @@
 	let pokemonOne = $derived($pokemonOneQuery.data);
 	let pokemonTwo = $derived($pokemonTwoQuery.data);
 
+	let pokemonOneMoves = $derived(pokemonOne?.moves.map((pokemonMove) => pokemonMove.move.name));
+	let pokemonTwoMoves = $derived(pokemonTwo?.moves.map((pokemonMove) => pokemonMove.move.name));
+
 	let nonMatchingMoves = $derived(
-		pokemonOne?.moves
-			.filter((move) => !pokemonTwo?.moves.includes(move))
-			.map((pokemonMove) => pokemonMove.move.name)
+		pokemonOneMoves && pokemonTwoMoves
+			? pokemonOneMoves.filter((move) => !pokemonTwoMoves.includes(move))
+			: undefined
 	);
 
 	let remainingMoveAnswers = $derived.by(() => {
@@ -176,6 +180,8 @@
 		}
 		return chosenAnswer === selectedMove;
 	});
+
+	$inspect(pokemonOneMoves, pokemonTwoMoves);
 </script>
 
 <div>
@@ -194,8 +200,8 @@
 	</h2>
 	{#if !pokemonOne || !pokemonTwo || !remainingMoveAnswers || !moveChoices}
 		<div class="flex flex-col items-center justify-center gap-8 pb-8 lg:flex-row">
-			<Skeleton class="h-32 w-32 rounded-lg" />
-			<Skeleton class="h-32 w-32 rounded-lg" />
+			<Skeleton class="h-52 w-52 rounded-lg" />
+			<Skeleton class="h-52 w-52 rounded-lg" />
 		</div>
 		<div class="flex flex-col items-center justify-center gap-2 pb-10 lg:flex-row lg:gap-8">
 			<Button class="w-40" disabled></Button>
@@ -206,15 +212,17 @@
 	{:else}
 		<div class="flex flex-col items-center justify-center gap-8 pb-8 lg:flex-row">
 			<div>
+				<div class="text-center font-bold">{toPascalCase(pokemonOne.name)}</div>
 				<img
-					class="border-primary h-32 w-32 rounded-lg border-2 object-cover"
+					class="border-primary h-52 w-52 rounded-lg border-2 object-cover"
 					src={pokemonOne.sprites.front_default}
 					alt={pokemonOne.name}
 				/>
 			</div>
-			<div>
+			<div class="flex flex-col font-bold">
+				<div class="text-center">{toPascalCase(pokemonTwo.name)}</div>
 				<img
-					class="border-primary h-32 w-32 rounded-lg border-2 object-cover"
+					class="border-primary h-52 w-52 rounded-lg border-2 object-cover"
 					src={pokemonTwo.sprites.front_default}
 					alt={pokemonTwo.name}
 				/>
@@ -235,7 +243,8 @@
 						? 'border-green-400 text-white'
 						: correctAnswerSelected !== undefined
 							? 'border-red-400 text-white'
-							: ''}">{move.names.find((x) => x.language.name === locale)?.name ?? move.name}</Button
+							: ''} {correctAnswerSelected && selectedMove === move.name && 'animate-bounce'}"
+					>{move.names.find((x) => x.language.name === locale)?.name ?? move.name}</Button
 				>
 			{/each}
 		</div>
