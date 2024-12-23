@@ -169,7 +169,9 @@
 				setSelectedMove(moveList);
 			}
 		} else {
-			goto('/');
+			goto('/games/move-matcher/game-end', {
+				state: { score: currentScore, totalQuestions }
+			});
 		}
 	};
 
@@ -180,8 +182,6 @@
 		}
 		return chosenAnswer === selectedMove;
 	});
-
-	$inspect(pokemonOneMoves, pokemonTwoMoves);
 </script>
 
 <div>
@@ -204,23 +204,23 @@
 			<Skeleton class="h-52 w-52 rounded-lg" />
 		</div>
 		<div class="flex flex-col items-center justify-center gap-2 pb-10 lg:flex-row lg:gap-8">
-			<Button class="w-40" disabled></Button>
-			<Button class="w-40" disabled></Button>
-			<Button class="w-40" disabled></Button>
-			<Button class="w-40" disabled></Button>
+			<Button class="w-[90%] lg:w-60" disabled></Button>
+			<Button class="w-[90%] lg:w-60" disabled></Button>
+			<Button class="w-[90%] lg:w-60" disabled></Button>
+			<Button class="w-[90%] lg:w-60" disabled></Button>
 		</div>
 	{:else}
 		<div class="flex flex-col items-center justify-center gap-8 pb-8 lg:flex-row">
 			<div>
-				<div class="text-center font-bold">{toPascalCase(pokemonOne.name)}</div>
+				<div class="pb-2 text-center font-bold">{toPascalCase(pokemonOne.name)}</div>
 				<img
 					class="border-primary h-52 w-52 rounded-lg border-2 object-cover"
 					src={pokemonOne.sprites.front_default}
 					alt={pokemonOne.name}
 				/>
 			</div>
-			<div class="flex flex-col font-bold">
-				<div class="text-center">{toPascalCase(pokemonTwo.name)}</div>
+			<div class="flex flex-col">
+				<div class="pb-2 text-center font-bold">{toPascalCase(pokemonTwo.name)}</div>
 				<img
 					class="border-primary h-52 w-52 rounded-lg border-2 object-cover"
 					src={pokemonTwo.sprites.front_default}
@@ -239,18 +239,21 @@
 						}
 					}}
 					variant="outline"
-					class="w-40 {selectedMove === move.name && correctAnswerSelected !== undefined
-						? 'border-green-400 text-white'
+					class="w-[90%] text-lg lg:w-60 {selectedMove === move.name &&
+					correctAnswerSelected !== undefined
+						? 'bg-green-500 text-black brightness-150'
 						: correctAnswerSelected !== undefined
-							? 'border-red-400 text-white'
+							? 'bg-red-500 text-black brightness-150'
 							: ''} {correctAnswerSelected && selectedMove === move.name && 'animate-bounce'}"
 					>{move.names.find((x) => x.language.name === locale)?.name ?? move.name}</Button
 				>
 			{/each}
 		</div>
-		<div class="flex items-center justify-center lg:items-end lg:justify-end">
-			<Button disabled={correctAnswerSelected === undefined} onclick={onNextQuestion}
-				>Next Question</Button
+		<div class="flex w-full items-center justify-center">
+			<Button
+				class="w-[90%] lg:w-52"
+				disabled={correctAnswerSelected === undefined}
+				onclick={onNextQuestion}>Next Question</Button
 			>
 		</div>
 	{/if}
