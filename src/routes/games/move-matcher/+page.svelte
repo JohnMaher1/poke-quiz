@@ -253,7 +253,8 @@
 			<Button
 				class="w-[90%] lg:w-52"
 				disabled={correctAnswerSelected === undefined}
-				onclick={onNextQuestion}>Next Question</Button
+				onclick={onNextQuestion}
+				>{totalQuestions === currentQuestion ? 'Finish' : 'Next Question'}</Button
 			>
 		</div>
 	{/if}
