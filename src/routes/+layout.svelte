@@ -30,6 +30,6 @@
 			</div>
 		</div>
 
-		<ModeWatcher />
+		<ModeWatcher defaultMode={'dark'} />
 	</ParaglideJS>
 </QueryClientProvider>

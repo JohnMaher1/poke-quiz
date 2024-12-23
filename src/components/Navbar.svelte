@@ -24,7 +24,8 @@
 
 		<div class="flex w-full justify-end space-x-4">
 			<div>
-				<ThemeSwitch />
+				<!-- TODO: Add back in once light theme supported -->
+				<!-- <ThemeSwitch /> -->
 			</div>
 			<!-- TODO: Add user login and other things -->
 			<!-- <DropdownMenu>
