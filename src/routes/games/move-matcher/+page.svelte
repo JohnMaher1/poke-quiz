@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import Skeleton from '$lib/components/ui/skeleton/skeleton.svelte';
+	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { fetchData } from '$lib/http/pokemon-api-service.svelte';
+	import { languageTag } from '$lib/paraglide/runtime.js';
 	import { reactiveQueryArgs } from '$lib/tanstack-query-utils.svelte';
 	import { toPascalCase } from '$lib/text-helpers';
 	import { createQuery } from '@tanstack/svelte-query';
@@ -12,14 +13,11 @@
 	let currentQuestion = $state(1);
 	let totalQuestions = 10;
 
-	let locale = 'en'; // TODO: Get locale from store
+	let { data } = $props();
 
-	const movesQuery = createQuery<{ results: { name: string; url: string }[] }>({
-		queryKey: ['moves'],
-		queryFn: async () => await fetchData('move?limit=1000')
-	});
+	const locale = languageTag();
 
-	let moveList = $derived($movesQuery.data?.results.map((move) => move.name));
+	let moveList = $derived(data.moves.map((move) => move.name));
 
 	let selectedMove = $state<string | undefined>(undefined);
 	$effect(() => {
@@ -163,6 +161,8 @@
 
 	const onNextQuestion = () => {
 		chosenAnswer = undefined;
+		pokemonImageOneLoaded = false;
+		pokemonImageTwoLoaded = false;
 		if (currentQuestion < totalQuestions) {
 			currentQuestion++;
 			if (moveList) {
@@ -182,12 +182,37 @@
 		}
 		return chosenAnswer === selectedMove;
 	});
+
+	let pokemonImageOne = $derived(pokemonOne?.sprites.front_default);
+	let pokemonImageTwo = $derived(pokemonTwo?.sprites.front_default);
+	let pokemonImageOneLoaded = $state(false);
+	let pokemonImageTwoLoaded = $state(false);
+	$effect(() => {
+		let imgOne: HTMLImageElement;
+		let imgTwo: HTMLImageElement;
+		if (pokemonImageOne) {
+			imgOne = new Image();
+			imgOne.src = pokemonImageOne;
+			imgOne.onload = () => {
+				pokemonImageOneLoaded = true;
+			};
+		}
+		if (pokemonImageTwo) {
+			imgTwo = new Image();
+			imgTwo.src = pokemonImageTwo;
+			imgTwo.onload = () => {
+				pokemonImageTwoLoaded = true;
+			};
+		}
+		return () => {
+			imgOne?.remove();
+			imgTwo?.remove();
+		};
+	});
 </script>
 
-<div>
-	<div
-		class="flex w-full flex-col items-center justify-center gap-2 pb-4 lg:flex-row lg:justify-between"
-	>
+{#snippet gameHeader()}
+	<div class="flex w-full items-center justify-center gap-4 pb-4">
 		<div class="border-primary w-48 rounded-lg border-2 p-2 text-center">
 			Score | <span class="font-bold">{currentScore}</span>
 		</div>
@@ -195,67 +220,91 @@
 			Question | <span class="font-bold">{currentQuestion} / {totalQuestions}</span>
 		</div>
 	</div>
-	<h2 class="flex items-center justify-center pb-8 text-2xl">
+	<h2 class="flex items-center justify-center pb-8 text-center text-2xl">
 		Which move do these Pokemon have in common?
 	</h2>
-	{#if !pokemonOne || !pokemonTwo || !remainingMoveAnswers || !moveChoices}
-		<div class="flex flex-col items-center justify-center gap-8 pb-8 lg:flex-row">
-			<Skeleton class="h-52 w-52 rounded-lg" />
-			<Skeleton class="h-52 w-52 rounded-lg" />
+{/snippet}
+
+<div class="h-full">
+	{#if !pokemonOne || !pokemonTwo || !moveChoices || !remainingMoveAnswers || !pokemonImageOneLoaded || !pokemonImageTwoLoaded}
+		{@render gameHeader()}
+		<div class="flex flex-row items-center justify-center gap-4 pb-8">
+			<div class="flex flex-col items-end justify-end gap-2">
+				<Skeleton class="h-4 w-36 lg:w-52" />
+				<Skeleton class="h-36 w-36 rounded-lg lg:h-52 lg:w-52" />
+			</div>
+			<div class="flex flex-col gap-2">
+				<Skeleton class="h-4 w-36 lg:w-52" />
+				<Skeleton class="h-36 w-36 rounded-lg lg:h-52 lg:w-52" />
+			</div>
 		</div>
-		<div class="flex flex-col items-center justify-center gap-2 pb-10 lg:flex-row lg:gap-8">
-			<Button class="w-[90%] lg:w-60" disabled></Button>
-			<Button class="w-[90%] lg:w-60" disabled></Button>
-			<Button class="w-[90%] lg:w-60" disabled></Button>
-			<Button class="w-[90%] lg:w-60" disabled></Button>
+		<div class="flex w-full flex-col items-center justify-center gap-2 pb-10 lg:flex-row lg:gap-8">
+			<Skeleton class="h-10 w-[90%] lg:w-60" />
+			<Skeleton class="h-10 w-[90%] lg:w-60" />
+			<Skeleton class="h-10 w-[90%] lg:w-60" />
+			<Skeleton class="h-10 w-[90%] lg:w-60" />
 		</div>
 	{:else}
-		<div class="flex flex-col items-center justify-center gap-8 pb-8 lg:flex-row">
+		<div class="flex h-full flex-col justify-between lg:justify-normal">
 			<div>
-				<div class="pb-2 text-center font-bold">{toPascalCase(pokemonOne.name)}</div>
-				<img
-					class="border-primary h-52 w-52 rounded-lg border-2 object-cover"
-					src={pokemonOne.sprites.front_default}
-					alt={pokemonOne.name}
-				/>
+				{@render gameHeader()}
+				<div class="flex items-center justify-center gap-4 pb-8">
+					<div class="flex w-full flex-col items-end justify-end">
+						<div class="w-32 overflow-x-scroll pb-2 text-center font-bold text-nowrap lg:w-52">
+							{toPascalCase(pokemonOne.name)}
+						</div>
+						<img
+							class="border-primary h-36 w-36 self-end rounded-lg border-2 object-cover lg:h-52 lg:w-52"
+							src={pokemonOne.sprites.front_default}
+							alt={pokemonOne.name}
+						/>
+					</div>
+					<div class="flex w-full flex-col">
+						<div class="w-32 overflow-x-scroll pb-2 text-center font-bold text-nowrap lg:w-52">
+							{toPascalCase(pokemonTwo.name)}
+						</div>
+						<img
+							class="border-primary h-36 w-36 self-start rounded-lg border-2 object-cover lg:h-52 lg:w-52"
+							src={pokemonTwo.sprites.front_default}
+							alt={pokemonTwo.name}
+						/>
+					</div>
+				</div>
+
+				<div class="flex flex-col items-center justify-center gap-2 pb-10 lg:flex-row lg:gap-6">
+					{#each moveChoices as move}
+						<Button
+							disabled={correctAnswerSelected !== undefined}
+							onclick={() => {
+								chosenAnswer = move.name;
+								if (selectedMove === move.name) {
+									currentScore++;
+								}
+							}}
+							variant="outline"
+							class="w-[90%] text-lg lg:w-60 {selectedMove === move.name &&
+							correctAnswerSelected !== undefined
+								? 'bg-green-500 text-black brightness-150'
+								: correctAnswerSelected !== undefined
+									? 'bg-red-500 text-black brightness-150'
+									: ''} {correctAnswerSelected && selectedMove === move.name && 'animate-bounce'}"
+							>{move.names.find((x) => x.language.name === locale)?.name ?? move.name}</Button
+						>
+					{/each}
+				</div>
 			</div>
-			<div class="flex flex-col">
-				<div class="pb-2 text-center font-bold">{toPascalCase(pokemonTwo.name)}</div>
-				<img
-					class="border-primary h-52 w-52 rounded-lg border-2 object-cover"
-					src={pokemonTwo.sprites.front_default}
-					alt={pokemonTwo.name}
-				/>
+			<div>
+				<div>
+					<div class="flex w-full items-center justify-center">
+						<Button
+							class="w-[90%] lg:w-80"
+							disabled={correctAnswerSelected === undefined}
+							onclick={onNextQuestion}
+							>{totalQuestions === currentQuestion ? 'Finish' : 'Next Question'}</Button
+						>
+					</div>
+				</div>
 			</div>
-		</div>
-		<div class="flex flex-col items-center justify-center gap-2 pb-10 lg:flex-row lg:gap-8">
-			{#each moveChoices as move}
-				<Button
-					disabled={correctAnswerSelected !== undefined}
-					onclick={() => {
-						chosenAnswer = move.name;
-						if (selectedMove === move.name) {
-							currentScore++;
-						}
-					}}
-					variant="outline"
-					class="w-[90%] text-lg lg:w-60 {selectedMove === move.name &&
-					correctAnswerSelected !== undefined
-						? 'bg-green-500 text-black brightness-150'
-						: correctAnswerSelected !== undefined
-							? 'bg-red-500 text-black brightness-150'
-							: ''} {correctAnswerSelected && selectedMove === move.name && 'animate-bounce'}"
-					>{move.names.find((x) => x.language.name === locale)?.name ?? move.name}</Button
-				>
-			{/each}
-		</div>
-		<div class="flex w-full items-center justify-center">
-			<Button
-				class="w-[90%] lg:w-52"
-				disabled={correctAnswerSelected === undefined}
-				onclick={onNextQuestion}
-				>{totalQuestions === currentQuestion ? 'Finish' : 'Next Question'}</Button
-			>
 		</div>
 	{/if}
 </div>
