@@ -5,7 +5,7 @@
 </script>
 
 <header class="bg-card shadow-xs">
-	<div class="flex items-center p-4">
+	<div class="flex items-center p-2">
 		<Tooltip.Provider>
 			<Tooltip.Root>
 				<Tooltip.Trigger
@@ -13,7 +13,7 @@
 						class="flex cursor-pointer items-center justify-center pr-2 text-center hover:brightness-125"
 						onclick={() => goto('/')}
 					>
-						<img src="/logo.webp" alt="Poke-Quiz Logo" class="h-12 w-auto rounded-full" />
+						<img src="/logo.webp" alt="Poke-Quiz Logo" class="h-10 w-auto rounded-full lg:h-12" />
 					</button></Tooltip.Trigger
 				>
 				<Tooltip.Content>

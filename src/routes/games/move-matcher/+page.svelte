@@ -8,6 +8,7 @@
 	import { toPascalCase } from '$lib/text-helpers';
 	import { createQuery } from '@tanstack/svelte-query';
 	import type { Move, Pokemon } from 'pokenode-ts/lib/index.d.ts';
+	import { Confetti } from 'svelte-confetti';
 
 	let currentScore = $state(0);
 	let currentQuestion = $state(1);
@@ -165,6 +166,7 @@
 		pokemonImageTwoLoaded = false;
 		if (currentQuestion < totalQuestions) {
 			currentQuestion++;
+			hasChosenCorrectMove = false;
 			if (moveList) {
 				setSelectedMove(moveList);
 			}
@@ -209,6 +211,13 @@
 			imgTwo?.remove();
 		};
 	});
+
+	let hasChosenCorrectMove = $state(false);
+
+	const onCorrectMovedSelected = () => {
+		currentScore++;
+		hasChosenCorrectMove = true;
+	};
 </script>
 
 {#snippet gameHeader()}
@@ -250,7 +259,9 @@
 				{@render gameHeader()}
 				<div class="flex items-center justify-center gap-4 pb-8">
 					<div class="flex w-full flex-col items-end justify-end">
-						<div class="w-32 overflow-x-scroll pb-2 text-center font-bold text-nowrap lg:w-52">
+						<div
+							class="w-32 truncate overflow-x-hidden pb-2 text-center font-bold text-nowrap lg:w-52"
+						>
 							{toPascalCase(pokemonOne.name)}
 						</div>
 						<img
@@ -260,7 +271,9 @@
 						/>
 					</div>
 					<div class="flex w-full flex-col">
-						<div class="w-32 overflow-x-scroll pb-2 text-center font-bold text-nowrap lg:w-52">
+						<div
+							class="w-32 truncate overflow-x-hidden pb-2 text-center font-bold text-nowrap lg:w-52"
+						>
 							{toPascalCase(pokemonTwo.name)}
 						</div>
 						<img
@@ -273,29 +286,37 @@
 
 				<div class="flex flex-col items-center justify-center gap-2 pb-10 lg:flex-row lg:gap-6">
 					{#each moveChoices as move}
-						<Button
-							disabled={correctAnswerSelected !== undefined}
-							onclick={() => {
-								chosenAnswer = move.name;
-								if (selectedMove === move.name) {
-									currentScore++;
-								}
-							}}
-							variant="outline"
-							class="w-[90%] text-lg lg:w-60 {selectedMove === move.name &&
-							correctAnswerSelected !== undefined
-								? 'bg-green-500 text-black brightness-150'
-								: correctAnswerSelected !== undefined
-									? 'bg-red-500 text-black brightness-150'
-									: ''} {correctAnswerSelected && selectedMove === move.name && 'animate-bounce'}"
-							>{move.names.find((x) => x.language.name === locale)?.name ?? move.name}</Button
-						>
+						{@const correctMove = move.name === selectedMove && correctAnswerSelected !== undefined}
+						<div class="relative">
+							{#if hasChosenCorrectMove && selectedMove === move.name}
+								<div class="absolute top-0 flex w-full items-center justify-center">
+									<Confetti fallDistance={'50px'} />
+								</div>
+							{/if}
+
+							<Button
+								disabled={correctAnswerSelected !== undefined}
+								onclick={() => {
+									chosenAnswer = move.name;
+									if (selectedMove === move.name) {
+										onCorrectMovedSelected();
+									}
+								}}
+								variant="outline"
+								class="w-[90%] text-lg lg:w-60 {correctMove
+									? 'bg-green-500 text-black brightness-150'
+									: correctAnswerSelected !== undefined
+										? 'bg-red-500 text-black brightness-150'
+										: ''} {correctAnswerSelected && selectedMove === move.name && 'animate-bounce'}"
+								>{move.names.find((x) => x.language.name === locale)?.name ?? move.name}
+							</Button>
+						</div>
 					{/each}
 				</div>
 			</div>
 			<div>
 				<div>
-					<div class="flex w-full items-center justify-center">
+					<div class="flex w-full items-center justify-center pb-4">
 						<Button
 							class="w-[90%] lg:w-80"
 							disabled={correctAnswerSelected === undefined}
@@ -308,6 +329,3 @@
 		</div>
 	{/if}
 </div>
-
-<style>
-</style>
