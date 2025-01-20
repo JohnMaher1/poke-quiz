@@ -10,7 +10,7 @@
 <div class="flex w-full items-center justify-center p-4 text-center">
 	<img src="/logo.webp" alt="Poke-Quiz Logo" class="h-24 w-auto rounded-full" />
 </div>
-<p class="mb-12 text-center text-xl">
+<p class="mb-12 text-center text-lg">
 	Test your Pokémon knowledge with some exciting quizzes and puzzles!
 </p>
 

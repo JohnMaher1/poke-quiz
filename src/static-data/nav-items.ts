@@ -13,7 +13,7 @@ export const navItems: GameHeader[] = [
 		icon: '📚',
 		description: 'Find the Pokémon from a given Pokédex entry.',
 		link: '/games/pokedex-matcher',
-		underConstruction: false
+		underConstruction: true
 	},
 	{
 		name: 'Pokémon Trivia',

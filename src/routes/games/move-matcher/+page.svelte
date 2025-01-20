@@ -283,42 +283,47 @@
 						/>
 					</div>
 				</div>
+				<div class="flex w-full items-center justify-center">
+					<div
+						class="flex w-full max-w-5xl flex-col items-center justify-center gap-2 pb-10 lg:flex-row lg:gap-6"
+					>
+						{#each moveChoices as move}
+							{@const correctMove =
+								move.name === selectedMove && correctAnswerSelected !== undefined}
+							<div class="relative w-full">
+								{#if hasChosenCorrectMove && selectedMove === move.name}
+									<div class="absolute top-0 flex w-full items-center justify-center">
+										<Confetti fallDistance={'50px'} />
+									</div>
+								{/if}
 
-				<div class="flex flex-col items-center justify-center gap-2 pb-10 lg:flex-row lg:gap-6">
-					{#each moveChoices as move}
-						{@const correctMove = move.name === selectedMove && correctAnswerSelected !== undefined}
-						<div class="relative">
-							{#if hasChosenCorrectMove && selectedMove === move.name}
-								<div class="absolute top-0 flex w-full items-center justify-center">
-									<Confetti fallDistance={'50px'} />
-								</div>
-							{/if}
-
-							<Button
-								disabled={correctAnswerSelected !== undefined}
-								onclick={() => {
-									chosenAnswer = move.name;
-									if (selectedMove === move.name) {
-										onCorrectMovedSelected();
-									}
-								}}
-								variant="outline"
-								class="w-[90%] text-lg lg:w-60 {correctMove
-									? 'bg-green-500 text-black brightness-150'
-									: correctAnswerSelected !== undefined
-										? 'bg-red-500 text-black brightness-150'
-										: ''} {correctAnswerSelected && selectedMove === move.name && 'animate-bounce'}"
-								>{move.names.find((x) => x.language.name === locale)?.name ?? move.name}
-							</Button>
-						</div>
-					{/each}
+								<Button
+									disabled={correctAnswerSelected !== undefined}
+									onclick={() => {
+										chosenAnswer = move.name;
+										if (selectedMove === move.name) {
+											onCorrectMovedSelected();
+										}
+									}}
+									variant={correctAnswerSelected === undefined
+										? 'outline'
+										: correctMove
+											? 'success'
+											: 'destructive'}
+									class="w-full  {hasChosenCorrectMove && correctMove && 'animate-bounce'}"
+									>{move.names.find((x) => x.language.name === locale)?.name ?? move.name}
+								</Button>
+							</div>
+						{/each}
+					</div>
 				</div>
 			</div>
 			<div>
 				<div>
 					<div class="flex w-full items-center justify-center pb-4">
 						<Button
-							class="w-[90%] lg:w-80"
+							variant="default"
+							class="relative w-[90%] bg-gradient-to-r  lg:w-80"
 							disabled={correctAnswerSelected === undefined}
 							onclick={onNextQuestion}
 							>{totalQuestions === currentQuestion ? 'Finish' : 'Next Question'}</Button
