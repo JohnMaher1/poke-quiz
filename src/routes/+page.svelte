@@ -5,7 +5,7 @@
 </script>
 
 <div class="flex w-full justify-center">
-	<h1 class="header-text-gradient text-center text-4xl font-bold">Poke-Quiz</h1>
+	<h1 class="text-primary text-4xl font-bold">Poke-Quiz</h1>
 </div>
 <div class="flex w-full items-center justify-center p-4 text-center">
 	<img src="/logo.webp" alt="Poke-Quiz Logo" class="h-24 w-auto rounded-full" />
@@ -17,7 +17,7 @@
 <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
 	{#each navItems as item}
 		<div
-			class="dark:bg-popover flex flex-col justify-between rounded-lg p-6 shadow-md transition-shadow hover:shadow-lg"
+			class="bg-paper flex flex-col justify-between rounded-lg p-6 shadow-md transition-shadow hover:shadow-lg"
 		>
 			<h2 class="mb-4 flex items-center text-2xl font-semibold">
 				<span class="mr-3 text-3xl">{item.icon}</span>

@@ -1,26 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import ThemeSwitch from './ThemeSwitch.svelte';
 </script>
 
-<header class="bg-card shadow-xs">
-	<div class="flex items-center p-2">
-		<Tooltip.Provider>
-			<Tooltip.Root>
-				<Tooltip.Trigger
-					><button
-						class="flex cursor-pointer items-center justify-center pr-2 text-center hover:brightness-125"
-						onclick={() => goto('/')}
-					>
-						<img src="/logo.webp" alt="Poke-Quiz Logo" class="h-10 w-auto rounded-full lg:h-12" />
-					</button></Tooltip.Trigger
-				>
-				<Tooltip.Content>
-					<p>Home</p>
-				</Tooltip.Content>
-			</Tooltip.Root>
-		</Tooltip.Provider>
+<header class="bg-primary shadow-xs">
+	<div class="flex items-center p-2 py-4">
+		<Button variant="outline" onclick={() => goto('/')}>Home</Button>
 
 		<div class="flex w-full justify-end space-x-4">
 			<div>
