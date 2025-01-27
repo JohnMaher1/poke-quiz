@@ -5,9 +5,9 @@
 	import ThemeSwitch from './ThemeSwitch.svelte';
 </script>
 
-<header class="bg-primary shadow-xs">
+<header class="bg-nav border-b-nav-separator border-b shadow-lg">
 	<div class="flex items-center p-2 py-4">
-		<Button variant="outline" onclick={() => goto('/')}>Home</Button>
+		<Button onclick={() => goto('/')}>Home</Button>
 
 		<div class="flex w-full justify-end space-x-4">
 			<div>

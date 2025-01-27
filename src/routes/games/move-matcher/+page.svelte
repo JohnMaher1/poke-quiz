@@ -218,14 +218,23 @@
 		currentScore++;
 		hasChosenCorrectMove = true;
 	};
+
+	const isLoading = $derived(
+		!pokemonOne ||
+			!pokemonTwo ||
+			!moveChoices ||
+			!remainingMoveAnswers ||
+			!pokemonImageOneLoaded ||
+			!pokemonImageTwoLoaded
+	);
 </script>
 
 {#snippet gameHeader()}
 	<div class="flex w-full items-center justify-center gap-4 pb-4">
-		<div class="border-primary w-48 rounded-lg border-2 p-2 text-center">
+		<div class="border-muted w-48 rounded-lg border p-2 text-center">
 			Score | <span class="font-bold">{currentScore}</span>
 		</div>
-		<div class="border-primary w-48 rounded-lg border-2 p-2 text-center">
+		<div class=" border-muted w-48 rounded-lg border p-2 text-center">
 			Question | <span class="font-bold">{currentQuestion} / {totalQuestions}</span>
 		</div>
 	</div>
@@ -265,7 +274,7 @@
 							{toPascalCase(pokemonOne.name)}
 						</div>
 						<img
-							class="border-primary h-36 w-36 self-end rounded-lg border-2 object-cover lg:h-52 lg:w-52"
+							class="border-muted h-36 w-36 self-end rounded-lg border-2 object-cover lg:h-52 lg:w-52"
 							src={pokemonOne.sprites.front_default}
 							alt={pokemonOne.name}
 						/>
@@ -277,7 +286,7 @@
 							{toPascalCase(pokemonTwo.name)}
 						</div>
 						<img
-							class="border-primary h-36 w-36 self-start rounded-lg border-2 object-cover lg:h-52 lg:w-52"
+							class="border-muted h-36 w-36 self-start rounded-lg border-2 object-cover lg:h-52 lg:w-52"
 							src={pokemonTwo.sprites.front_default}
 							alt={pokemonTwo.name}
 						/>
@@ -298,7 +307,6 @@
 								{/if}
 
 								<Button
-									disabled={correctAnswerSelected !== undefined}
 									onclick={() => {
 										chosenAnswer = move.name;
 										if (selectedMove === move.name) {
@@ -306,11 +314,13 @@
 										}
 									}}
 									variant={correctAnswerSelected === undefined
-										? 'outline'
+										? 'secondary'
 										: correctMove
 											? 'success'
 											: 'destructive'}
-									class="w-full  {hasChosenCorrectMove && correctMove && 'animate-bounce'}"
+									class="w-full  {hasChosenCorrectMove &&
+										correctMove &&
+										'animate-bounce'} {hasChosenCorrectMove === undefined && 'pointer-events-none'}"
 									>{move.names.find((x) => x.language.name === locale)?.name ?? move.name}
 								</Button>
 							</div>

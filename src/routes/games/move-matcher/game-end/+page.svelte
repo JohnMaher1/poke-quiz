@@ -14,8 +14,6 @@
 		You scored {data.score} out of {data.totalQuestions}!
 	</p>
 
-	<Button class="w-[90%] lg:w-80" variant="outline" onclick={() => goto('/games/move-matcher')}
-		>Play Again</Button
-	>
-	<Button class="w-[90%] lg:w-80" variant="outline" onclick={() => goto('/')}>Back Home</Button>
+	<Button class="w-[90%] lg:w-80" onclick={() => goto('/games/move-matcher')}>Play Again</Button>
+	<Button class="w-[90%] lg:w-80" onclick={() => goto('/')}>Back Home</Button>
 </div>
