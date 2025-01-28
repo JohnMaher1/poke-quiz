@@ -186,7 +186,10 @@
 	});
 
 	let pokemonImageOne = $derived(pokemonOne?.sprites.front_default);
+	let pokemonOneHasImage = $derived(pokemonOne && pokemonOne.sprites.front_default);
 	let pokemonImageTwo = $derived(pokemonTwo?.sprites.front_default);
+	let pokemonTwoHasImage = $derived(pokemonTwo && pokemonTwo.sprites.front_default);
+
 	let pokemonImageOneLoaded = $state(false);
 	let pokemonImageTwoLoaded = $state(false);
 	$effect(() => {
@@ -195,16 +198,22 @@
 		if (pokemonImageOne) {
 			imgOne = new Image();
 			imgOne.src = pokemonImageOne;
-			imgOne.onload = () => {
-				pokemonImageOneLoaded = true;
-			};
+			pokemonImageOneLoaded = true;
+		}
+		if (!pokemonOneHasImage) {
+			imgOne = new Image();
+			imgOne.alt = 'No Image';
+			pokemonImageOneLoaded = true;
 		}
 		if (pokemonImageTwo) {
 			imgTwo = new Image();
 			imgTwo.src = pokemonImageTwo;
-			imgTwo.onload = () => {
-				pokemonImageTwoLoaded = true;
-			};
+			pokemonImageTwoLoaded = true;
+		}
+		if (!pokemonTwoHasImage) {
+			imgTwo = new Image();
+			imgTwo.alt = 'No Image';
+			pokemonImageTwoLoaded = true;
 		}
 		return () => {
 			imgOne?.remove();
@@ -218,24 +227,15 @@
 		currentScore++;
 		hasChosenCorrectMove = true;
 	};
-
-	const isLoading = $derived(
-		!pokemonOne ||
-			!pokemonTwo ||
-			!moveChoices ||
-			!remainingMoveAnswers ||
-			!pokemonImageOneLoaded ||
-			!pokemonImageTwoLoaded
-	);
 </script>
 
 {#snippet gameHeader()}
 	<div class="flex w-full items-center justify-center gap-4 pb-4">
-		<div class="border-muted w-48 rounded-lg border p-2 text-center">
-			Score | <span class="font-bold">{currentScore}</span>
+		<div class=" border-muted flex w-48 justify-between rounded-md border p-2 px-4 text-center">
+			<span>Question:</span> <span class="font-bold">{currentQuestion} / {totalQuestions}</span>
 		</div>
-		<div class=" border-muted w-48 rounded-lg border p-2 text-center">
-			Question | <span class="font-bold">{currentQuestion} / {totalQuestions}</span>
+		<div class="border-muted flex w-48 justify-between rounded-md border p-2 px-4 text-center">
+			<span>Score:</span><span class="font-bold">{currentScore}</span>
 		</div>
 	</div>
 	<h2 class="flex items-center justify-center pb-8 text-center text-2xl">
@@ -246,47 +246,49 @@
 <div class="h-full">
 	{#if !pokemonOne || !pokemonTwo || !moveChoices || !remainingMoveAnswers || !pokemonImageOneLoaded || !pokemonImageTwoLoaded}
 		{@render gameHeader()}
-		<div class="flex flex-row items-center justify-center gap-4 pb-8">
+		<div class="mx-auto flex max-w-2xl flex-row items-center justify-center gap-4 pb-8">
 			<div class="flex flex-col items-end justify-end gap-2">
-				<Skeleton class="h-4 w-36 lg:w-52" />
-				<Skeleton class="h-36 w-36 rounded-lg lg:h-52 lg:w-52" />
+				<Skeleton class="h-6 w-36 md:w-60" />
+				<Skeleton class="h-36 w-36 rounded-md md:h-60 md:w-60" />
 			</div>
 			<div class="flex flex-col gap-2">
-				<Skeleton class="h-4 w-36 lg:w-52" />
-				<Skeleton class="h-36 w-36 rounded-lg lg:h-52 lg:w-52" />
+				<Skeleton class="h-6 w-36 md:w-60" />
+				<Skeleton class="h-36 w-36 rounded-md md:h-60 md:w-60" />
 			</div>
 		</div>
-		<div class="flex w-full flex-col items-center justify-center gap-2 pb-10 lg:flex-row lg:gap-8">
-			<Skeleton class="h-10 w-[90%] lg:w-60" />
-			<Skeleton class="h-10 w-[90%] lg:w-60" />
-			<Skeleton class="h-10 w-[90%] lg:w-60" />
-			<Skeleton class="h-10 w-[90%] lg:w-60" />
+		<div
+			class="mx-auto flex w-full max-w-2xl flex-col items-center justify-center gap-2 pb-10 md:grid md:grid-cols-2 md:gap-8"
+		>
+			<Skeleton class="h-10 w-full" />
+			<Skeleton class="h-10 w-full" />
+			<Skeleton class="h-10 w-full" />
+			<Skeleton class="h-10 w-full" />
 		</div>
 	{:else}
-		<div class="flex h-full flex-col justify-between lg:justify-normal">
+		<div class="flex h-full flex-col justify-between md:justify-normal">
 			<div>
 				{@render gameHeader()}
 				<div class="flex items-center justify-center gap-4 pb-8">
 					<div class="flex w-full flex-col items-end justify-end">
 						<div
-							class="w-32 truncate overflow-x-hidden pb-2 text-center font-bold text-nowrap lg:w-52"
+							class="w-32 truncate overflow-x-hidden pb-2 text-center font-bold text-nowrap md:w-60"
 						>
 							{toPascalCase(pokemonOne.name)}
 						</div>
 						<img
-							class="border-muted h-36 w-36 self-end rounded-lg border-2 object-cover lg:h-52 lg:w-52"
+							class="border-muted h-36 w-36 self-end rounded-md border-2 object-cover md:h-60 md:w-60"
 							src={pokemonOne.sprites.front_default}
 							alt={pokemonOne.name}
 						/>
 					</div>
 					<div class="flex w-full flex-col">
 						<div
-							class="w-32 truncate overflow-x-hidden pb-2 text-center font-bold text-nowrap lg:w-52"
+							class="w-32 truncate overflow-x-hidden pb-2 text-center font-bold text-nowrap md:w-60"
 						>
 							{toPascalCase(pokemonTwo.name)}
 						</div>
 						<img
-							class="border-muted h-36 w-36 self-start rounded-lg border-2 object-cover lg:h-52 lg:w-52"
+							class="border-muted h-36 w-36 self-start rounded-md border-2 object-cover md:h-60 md:w-60"
 							src={pokemonTwo.sprites.front_default}
 							alt={pokemonTwo.name}
 						/>
@@ -294,7 +296,7 @@
 				</div>
 				<div class="flex w-full items-center justify-center">
 					<div
-						class="flex w-full max-w-5xl flex-col items-center justify-center gap-2 pb-10 lg:flex-row lg:gap-6"
+						class="flex w-full max-w-2xl flex-col items-center justify-center gap-2 pb-10 md:grid md:grid-cols-2 md:gap-6"
 					>
 						{#each moveChoices as move}
 							{@const correctMove =
@@ -333,7 +335,7 @@
 					<div class="flex w-full items-center justify-center pb-4">
 						<Button
 							variant="default"
-							class="relative w-[90%] bg-gradient-to-r  lg:w-80"
+							class="relative w-[90%] bg-gradient-to-r  md:w-100"
 							disabled={correctAnswerSelected === undefined}
 							onclick={onNextQuestion}
 							>{totalQuestions === currentQuestion ? 'Finish' : 'Next Question'}</Button
