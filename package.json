@@ -24,7 +24,7 @@
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
 		"@tailwindcss/postcss": "^4.0.0-beta.8",
 		"@tanstack/svelte-query": "^5.45.0",
-		"bits-ui": "^1.0.0-next.78",
+		"bits-ui": "^1.0.0-next.79",
 		"clsx": "^2.1.1",
 		"drizzle-kit": "^0.22.0",
 		"eslint": "^9.7.0",
