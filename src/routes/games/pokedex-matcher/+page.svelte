@@ -82,6 +82,8 @@
 
 	let inputVal = $state('');
 
+	let userSelection = $state('');
+
 	let filteredPokemonNames = $derived.by(() => {
 		if (!pokemonNames) {
 			return [];
@@ -93,52 +95,54 @@
 	});
 </script>
 
-{#snippet item(val: string)}
-	<div class="cursor-pointer hover:brightness-90">
-		<Check class={cn('mr-2 size-4')} />
-		{val}
+<div class="mx-auto flex max-w-2xl flex-col items-center justify-center gap-4 text-center">
+	<div>
+		{formattedTextEntry}
 	</div>
-{/snippet}
-
-<div>
-	{formattedTextEntry}
+	<Popover.Root bind:open>
+		<Popover.Trigger bind:ref={triggerRef}>
+			{#snippet child({ props })}
+				<Button
+					variant="secondary"
+					class="w-[200px] justify-between"
+					{...props}
+					role="combobox"
+					aria-expanded={open}
+				>
+					{toPascalCase(userSelection) || 'Select a Pokemon...'}
+					<ChevronsUpDown class="ml-2 size-4 shrink-0 opacity-50" />
+				</Button>
+			{/snippet}
+		</Popover.Trigger>
+		<Popover.Content class="w-[200px] p-0">
+			<Command.Root>
+				<Command.Input
+					{value}
+					oninput={(x) => {
+						inputVal = (x.target as HTMLInputElement).value;
+					}}
+					placeholder="Search Pokemon..."
+				/>
+				<Command.List>
+					<Command.Empty>No Pokemon found</Command.Empty>
+				</Command.List>
+				<div class="flex max-h-80 flex-col overflow-y-auto">
+					{#each filteredPokemonNames as pokedexName}
+						<button
+							onclick={() => {
+								open = false;
+								userSelection = pokedexName;
+							}}
+						>
+							<div
+								class="hover:bg-primary hover:text-primary-foreground w-full cursor-pointer px-4 py-2"
+							>
+								{toPascalCase(pokedexName)}
+							</div>
+						</button>
+					{/each}
+				</div>
+			</Command.Root>
+		</Popover.Content>
+	</Popover.Root>
 </div>
-
-<Popover.Root bind:open>
-	<Popover.Trigger bind:ref={triggerRef}>
-		{#snippet child({ props })}
-			<Button
-				variant="secondary"
-				class="w-[200px] justify-between"
-				{...props}
-				role="combobox"
-				aria-expanded={open}
-			>
-				{selectedValue || 'Select a Pokemon...'}
-				<ChevronsUpDown class="ml-2 size-4 shrink-0 opacity-50" />
-			</Button>
-		{/snippet}
-	</Popover.Trigger>
-	<Popover.Content class="w-[200px] p-0">
-		<Command.Root>
-			<Command.Input
-				oninput={(x) => {
-					inputVal = (x.target as HTMLInputElement).value;
-				}}
-				placeholder="Search Pokemon..."
-			/>
-			<Command.List>
-				<Command.Empty>No Pokemon found</Command.Empty>
-			</Command.List>
-			<div>
-				{#each filteredPokemonNames as pokedexName}
-					<div
-						class="hover:bg-primary hover:text-primary-foreground w-full cursor-pointer px-4 py-2"
-					>
-						{toPascalCase(pokedexName)}
-					</div>
-				{/each}
-			</div>
-		</Command.Root>
-	</Popover.Content>
-</Popover.Root>
