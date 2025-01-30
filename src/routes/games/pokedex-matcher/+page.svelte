@@ -14,7 +14,7 @@
 	import { toPascalCase } from '$lib/text-helpers.js';
 	import { Item } from '$lib/components/ui/dropdown-menu/index.js';
 
-	let open = $state(false);
+	let open = $state(true);
 	let value = $state('');
 	let triggerRef = $state<HTMLButtonElement>(null!);
 
@@ -93,56 +93,59 @@
 		}
 		return pokemonNames.filter((p) => p.toLowerCase().includes(inputVal.toLowerCase()));
 	});
+
+	let isLoading = $derived($selectedPokedexQuery.isLoading || $pokemonSpeciesQuery.isLoading);
 </script>
 
-<div class="mx-auto flex max-w-2xl flex-col items-center justify-center gap-4 text-center">
-	<div>
-		{formattedTextEntry}
-	</div>
-	<Popover.Root bind:open>
-		<Popover.Trigger bind:ref={triggerRef}>
-			{#snippet child({ props })}
-				<Button
-					variant="secondary"
-					class="w-[200px] justify-between"
-					{...props}
-					role="combobox"
-					aria-expanded={open}
-				>
-					{toPascalCase(userSelection) || 'Select a Pokemon...'}
-					<ChevronsUpDown class="ml-2 size-4 shrink-0 opacity-50" />
-				</Button>
-			{/snippet}
-		</Popover.Trigger>
-		<Popover.Content class="w-[200px] p-0">
-			<Command.Root>
-				<Command.Input
-					{value}
-					oninput={(x) => {
-						inputVal = (x.target as HTMLInputElement).value;
-					}}
-					placeholder="Search Pokemon..."
-				/>
-				<Command.List>
-					<Command.Empty>No Pokemon found</Command.Empty>
-				</Command.List>
-				<div class="flex max-h-80 flex-col overflow-y-auto">
-					{#each filteredPokemonNames as pokedexName}
-						<button
-							onclick={() => {
-								open = false;
-								userSelection = pokedexName;
-							}}
-						>
-							<div
-								class="hover:bg-primary hover:text-primary-foreground w-full cursor-pointer px-4 py-2"
+<div class="mx-auto flex max-w-md flex-col items-center justify-center gap-4 text-center">
+	{#if isLoading}
+		<div>Loading...</div>
+	{:else}
+		<div>
+			Pokedex: {toPascalCase(selectedPokedexName)}
+		</div>
+		<div>
+			{formattedTextEntry}
+		</div>
+		{#if value}
+			<div>Selected Pokemon: {toPascalCase(value)}</div>
+		{/if}
+		<Command.Root>
+			<Command.Input
+				value={toPascalCase(value)}
+				oninput={(x) => {
+					inputVal = (x.target as HTMLInputElement).value;
+				}}
+				placeholder="Search Pokemon..."
+			/>
+			<Command.List>
+				{#if filteredPokemonNames.length === 0 && inputVal.length >= 3}
+					<div class="px-4 py-2">No results found</div>
+				{:else}
+					<div class="flex max-h-80 flex-col overflow-y-auto text-start">
+						{#each filteredPokemonNames as pokedexName}
+							<button
+								onclick={() => {
+									open = false;
+									userSelection = pokedexName;
+									inputVal = '';
+									value = pokedexName;
+								}}
 							>
-								{toPascalCase(pokedexName)}
-							</div>
-						</button>
-					{/each}
-				</div>
-			</Command.Root>
-		</Popover.Content>
-	</Popover.Root>
+								<div
+									class="hover:text-selection-foreground hover:bg-selection w-full cursor-pointer px-4 py-2 text-start"
+								>
+									{toPascalCase(pokedexName)}
+								</div>
+							</button>
+						{/each}
+					</div>
+				{/if}
+			</Command.List>
+			<div class="flex w-full items-center justify-center pt-12">
+				<Button variant="default" class="relative w-[90%] bg-gradient-to-r  md:w-100">Submit</Button
+				>
+			</div>
+		</Command.Root>
+	{/if}
 </div>
