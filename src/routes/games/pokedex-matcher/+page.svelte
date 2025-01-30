@@ -5,28 +5,12 @@
 	import type { Pokedex, PokemonSpecies } from 'pokenode-ts';
 	import { languageTag } from '$lib/paraglide/runtime.js';
 	import * as Command from '$lib/components/ui/command/index.js';
-	import * as Popover from '$lib/components/ui/popover/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import Check from 'lucide-svelte/icons/check';
-	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
-	import { cn } from '$lib/utils.js';
 	import { tick } from 'svelte';
 	import { toPascalCase } from '$lib/text-helpers.js';
-	import { Item } from '$lib/components/ui/dropdown-menu/index.js';
 
 	let open = $state(true);
 	let value = $state('');
-	let triggerRef = $state<HTMLButtonElement>(null!);
-
-	// We want to refocus the trigger button when the user selects
-	// an item from the list so users can continue navigating the
-	// rest of the form with the keyboard.
-	function closeAndFocusTrigger() {
-		open = false;
-		tick().then(() => {
-			triggerRef.focus();
-		});
-	}
 
 	let { data } = $props();
 	const locale = languageTag();
@@ -34,8 +18,6 @@
 	let pokedexNames = data.pokedexes.map((pokedex) => pokedex.name);
 	let pokemon = data.pokemon;
 	let pokemonNames = pokemon.map((p) => p.name);
-
-	const selectedValue = $derived(pokedexNames.find((f) => f === value));
 
 	const getRandomPokedex = (pokedexNames: string[], currentPokedex?: string) => {
 		let randomPokedex = pokedexNames[Math.floor(Math.random() * pokedexNames.length)];
@@ -94,6 +76,9 @@
 		return pokemonNames.filter((p) => p.toLowerCase().includes(inputVal.toLowerCase()));
 	});
 
+	let submittedAnswer = $state<string | undefined>(undefined);
+	let correctAnswerSelected = $derived(submittedAnswer === pokemonSpeciesName);
+
 	let isLoading = $derived($selectedPokedexQuery.isLoading || $pokemonSpeciesQuery.isLoading);
 </script>
 
@@ -102,13 +87,15 @@
 		<div>Loading...</div>
 	{:else}
 		<div>
-			Pokedex: {toPascalCase(selectedPokedexName)}
+			Pokedex: <span class="font-bold"> {toPascalCase(selectedPokedexName)}</span>
 		</div>
 		<div>
 			{formattedTextEntry}
 		</div>
 		{#if value}
-			<div>Selected Pokemon: {toPascalCase(value)}</div>
+			<div class="pt-4">
+				Selected Pokemon: <span class="text-selection-foreground">{toPascalCase(value)}</span>
+			</div>
 		{/if}
 		<Command.Root>
 			<Command.Input
@@ -143,9 +130,27 @@
 				{/if}
 			</Command.List>
 			<div class="flex w-full items-center justify-center pt-12">
-				<Button variant="default" class="relative w-[90%] bg-gradient-to-r  md:w-100">Submit</Button
+				<Button
+					variant="default"
+					class="relative w-[90%] bg-gradient-to-r md:w-100"
+					disabled={submittedAnswer !== undefined}
+					onclick={() => {
+						submittedAnswer = value;
+					}}>Submit</Button
 				>
 			</div>
 		</Command.Root>
+	{/if}
+	{#if submittedAnswer !== undefined}
+		<div>
+			{#if correctAnswerSelected}
+				<span class="text-success"
+					>Correct: <span class="text-selection-foreground">{pokemonSpeciesName!}</span></span
+				>
+			{:else}
+				<span class="text-destructive">Incorrect</span>:
+				<span class="text-selection-foreground"> {toPascalCase(pokemonSpeciesName!)}</span>
+			{/if}
+		</div>
 	{/if}
 </div>
