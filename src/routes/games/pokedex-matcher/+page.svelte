@@ -182,17 +182,16 @@
 			</div>
 		</Command.Root>
 	{/if}
-	{#if submittedAnswer !== undefined}
+	{#if submittedAnswer !== undefined && pokemonSpeciesName}
 		<div>
 			{#if correctAnswerSelected}
 				<span
-					>Correct: <span class="text-selection-foreground"
-						>{toPascalCase(pokemonSpeciesName!)}</span
+					>Correct: <span class="text-selection-foreground">{toPascalCase(pokemonSpeciesName)}</span
 					></span
 				>
 			{:else}
 				<span class="text-destructive">Incorrect</span>:
-				<span> {toPascalCase(pokemonSpeciesName!)}</span>
+				<span> {toPascalCase(pokemonSpeciesName)}</span>
 			{/if}
 		</div>
 	{/if}
