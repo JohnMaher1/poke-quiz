@@ -75,7 +75,7 @@
 		pokemonSpecies?.flavor_text_entries.find((f) => f.language.name === locale)
 	);
 	let removedPokemonNameTextEntry = $derived(
-		flavourTextEntry?.flavor_text.replace(new RegExp(pokemonSpeciesName ?? '', 'i'), '[Pokemon]')
+		flavourTextEntry?.flavor_text?.replace(new RegExp(pokemonSpeciesName ?? '', 'i'), '[Pokemon]')
 	);
 	let formattedTextEntry = $derived(removedPokemonNameTextEntry?.replace('\n', ' '));
 
