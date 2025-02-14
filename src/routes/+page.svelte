@@ -15,11 +15,11 @@
 <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
 	{#each navItems as item}
 		<Card.Root>
-			<Card.Header class="mb-4 flex flex-row items-center text-2xl font-semibold">
+			<Card.Header class=" flex flex-row items-center text-2xl font-semibold">
 				<span class="mr-3 text-3xl">{item.icon}</span>
 				{item.name}
 			</Card.Header>
-			<Card.Content>
+			<Card.Content class="pt-4">
 				<p class="text-muted-foreground mb-4">
 					{item.description}
 				</p>

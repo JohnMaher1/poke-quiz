@@ -2,22 +2,33 @@
 	import { fetchData } from '$lib/http/pokemon-api-service.svelte.js';
 	import { reactiveQueryArgs } from '$lib/tanstack-query-utils.svelte';
 	import { createQuery } from '@tanstack/svelte-query';
-	import type { Pokedex, PokemonSpecies } from 'pokenode-ts';
+	import type { NamedAPIResourceList, Pokedex, PokemonSpecies } from 'pokenode-ts';
 	import { languageTag } from '$lib/paraglide/runtime.js';
 	import * as Command from '$lib/components/ui/command/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import { tick } from 'svelte';
 	import { toPascalCase } from '$lib/text-helpers.js';
+	import Skeleton from '$lib/components/ui/skeleton/skeleton.svelte';
 
 	let open = $state(true);
 	let value = $state('');
 
-	let { data } = $props();
-	const locale = languageTag();
+	const pokedexQuery = createQuery<NamedAPIResourceList>(
+		reactiveQueryArgs(() => ({
+			queryKey: ['pokedex'],
+			queryFn: () => fetchData('pokedex?limit=1000')
+		}))
+	);
 
-	let pokedexNames = data.pokedexes.map((pokedex) => pokedex.name);
-	let pokemon = data.pokemon;
-	let pokemonNames = pokemon.map((p) => p.name);
+	const pokemonQuery = createQuery<NamedAPIResourceList>(
+		reactiveQueryArgs(() => ({
+			queryKey: ['pokemon'],
+			queryFn: () => fetchData('pokemon?limit=2000')
+		}))
+	);
+
+	const locale = languageTag();
+	const pokedexNames = $derived($pokedexQuery.data?.results.map((pokedex) => pokedex.name));
+	const pokemonNames = $derived($pokemonQuery.data?.results.map((p) => p.name));
 
 	const getRandomPokedex = (pokedexNames: string[], currentPokedex?: string) => {
 		let randomPokedex = pokedexNames[Math.floor(Math.random() * pokedexNames.length)];
@@ -27,7 +38,13 @@
 		return randomPokedex;
 	};
 
-	let selectedPokedexName = $state(getRandomPokedex(pokedexNames));
+	let selectedPokedexName = $state<string | undefined>(undefined);
+
+	$effect.root(() => {
+		if (pokedexNames) {
+			selectedPokedexName = getRandomPokedex(pokedexNames);
+		}
+	});
 
 	let selectedPokedexQuery = createQuery<Pokedex>(
 		reactiveQueryArgs(() => ({
@@ -79,15 +96,32 @@
 	let submittedAnswer = $state<string | undefined>(undefined);
 	let correctAnswerSelected = $derived(submittedAnswer === pokemonSpeciesName);
 
-	let isLoading = $derived($selectedPokedexQuery.isLoading || $pokemonSpeciesQuery.isLoading);
+	let isLoading = $derived(
+		$selectedPokedexQuery.isLoading ||
+			$pokemonSpeciesQuery.isLoading ||
+			$pokedexQuery.isLoading ||
+			$pokemonQuery.isLoading
+	);
+
+	const reset = () => {
+		selectedPokedexName = getRandomPokedex(pokedexNames!, selectedPokedexName);
+		submittedAnswer = undefined;
+		value = '';
+	};
 </script>
 
 <div class="mx-auto flex max-w-md flex-col items-center justify-center gap-4 text-center">
 	{#if isLoading}
-		<div>Loading...</div>
+		<div class="flex flex-col gap-2">
+			<Skeleton class="h-12 w-[90%] md:w-100" />
+			<Skeleton class="h-32 w-[90%] md:w-100" />
+			<div class="h-4"></div>
+			<Skeleton class="h-12 w-[90%] md:w-100" />
+			<Skeleton class="h-12 w-[90%] md:w-100" />
+		</div>
 	{:else}
 		<div>
-			Pokedex: <span class="font-bold"> {toPascalCase(selectedPokedexName)}</span>
+			Pokedex: <span class="font-bold"> {toPascalCase(selectedPokedexName!)}</span>
 		</div>
 		<div>
 			{formattedTextEntry}
@@ -99,6 +133,7 @@
 		{/if}
 		<Command.Root>
 			<Command.Input
+				disabled={submittedAnswer !== undefined}
 				value={toPascalCase(value)}
 				oninput={(x) => {
 					inputVal = (x.target as HTMLInputElement).value;
@@ -129,7 +164,7 @@
 					</div>
 				{/if}
 			</Command.List>
-			<div class="flex w-full items-center justify-center pt-12">
+			<div class="flex w-full flex-col items-center justify-center gap-2 pt-12">
 				<Button
 					variant="default"
 					class="relative w-[90%] bg-gradient-to-r md:w-100"
@@ -138,18 +173,26 @@
 						submittedAnswer = value;
 					}}>Submit</Button
 				>
+				<Button
+					variant="default"
+					class="relative w-[90%] bg-gradient-to-r md:w-100"
+					disabled={submittedAnswer === undefined}
+					onclick={reset}>Next Entry</Button
+				>
 			</div>
 		</Command.Root>
 	{/if}
 	{#if submittedAnswer !== undefined}
 		<div>
 			{#if correctAnswerSelected}
-				<span class="text-success"
-					>Correct: <span class="text-selection-foreground">{pokemonSpeciesName!}</span></span
+				<span
+					>Correct: <span class="text-selection-foreground"
+						>{toPascalCase(pokemonSpeciesName!)}</span
+					></span
 				>
 			{:else}
 				<span class="text-destructive">Incorrect</span>:
-				<span class="text-selection-foreground"> {toPascalCase(pokemonSpeciesName!)}</span>
+				<span> {toPascalCase(pokemonSpeciesName!)}</span>
 			{/if}
 		</div>
 	{/if}

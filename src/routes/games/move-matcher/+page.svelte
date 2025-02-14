@@ -7,18 +7,23 @@
 	import { reactiveQueryArgs } from '$lib/tanstack-query-utils.svelte';
 	import { toPascalCase } from '$lib/text-helpers';
 	import { createQuery } from '@tanstack/svelte-query';
-	import type { Move, Pokemon } from 'pokenode-ts/lib/index.d.ts';
+	import type { Move, NamedAPIResourceList, Pokemon } from 'pokenode-ts/lib/index.d.ts';
 	import { Confetti } from 'svelte-confetti';
 
 	let currentScore = $state(0);
 	let currentQuestion = $state(1);
 	let totalQuestions = 10;
 
-	let { data } = $props();
-
 	const locale = languageTag();
 
-	let moveList = $derived(data.moves.map((move) => move.name));
+	const movesQuery = createQuery<NamedAPIResourceList>(
+		reactiveQueryArgs(() => ({
+			queryKey: ['moves'],
+			queryFn: () => fetchData('move?limit=1000')
+		}))
+	);
+
+	let moveList = $derived($movesQuery.data?.results.map((move) => move.name));
 
 	let selectedMove = $state<string | undefined>(undefined);
 	$effect(() => {
@@ -128,7 +133,6 @@
 			const j = Math.floor(Math.random() * (i + 1));
 			[moves[i], moves[j]] = [moves[j], moves[i]];
 		}
-		pokemonOne?.sprites.front_default;
 	}
 
 	let remainingMovesQuery = createQuery<Move[]>(

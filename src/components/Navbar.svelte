@@ -6,39 +6,7 @@
 </script>
 
 <header class="bg-nav border-b-nav-separator border-b shadow-lg">
-	<div class="flex items-center p-2 py-4">
-		<Button onclick={() => goto('/')}>Home</Button>
-
-		<div class="flex w-full justify-end space-x-4">
-			<div>
-				<!-- TODO: Add back in once light theme supported -->
-				<!-- <ThemeSwitch /> -->
-			</div>
-			<!-- TODO: Add user login and other things -->
-			<!-- <DropdownMenu>
-				<DropdownMenuTrigger>
-					<Avatar>
-						<AvatarImage class="dark:bg-card" alt="User" />
-						<AvatarFallback class="dark:bg-card">U</AvatarFallback>
-					</Avatar>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent>
-					<DropdownMenuLabel>My Account</DropdownMenuLabel>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem>
-						<User class="mr-2 h-4 w-4" />
-						Profile
-					</DropdownMenuItem>
-					<DropdownMenuItem>
-						<Settings class="mr-2 h-4 w-4" />
-						Settings
-					</DropdownMenuItem>
-					<DropdownMenuItem>
-						<LogOut class="mr-2 h-4 w-4" />
-						Log out
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu> -->
-		</div>
+	<div class="flex items-center p-2 py-3">
+		<Button class="h-8 w-16" onclick={() => goto('/')}>Home</Button>
 	</div>
 </header>
