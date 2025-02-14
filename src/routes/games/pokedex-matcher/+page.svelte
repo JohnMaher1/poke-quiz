@@ -112,7 +112,7 @@
 
 <div class="mx-auto flex max-w-md flex-col items-center justify-center gap-4 text-center">
 	{#if isLoading}
-		<div class="flex w-full flex-col gap-2">
+		<div class="flex w-full flex-col items-center justify-center gap-2">
 			<Skeleton class="h-12 w-[90%] md:w-100" />
 			<Skeleton class="h-32 w-[90%] md:w-100" />
 			<div class="h-4"></div>
