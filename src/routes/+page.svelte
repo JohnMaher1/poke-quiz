@@ -14,16 +14,16 @@
 
 <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
 	{#each navItems as item}
-		<Card.Root>
+		<Card.Root class="flex h-full flex-col pb-4">
 			<Card.Header class=" flex flex-row items-center text-2xl font-semibold">
 				<span class="mr-3 text-3xl">{item.icon}</span>
 				{item.name}
 			</Card.Header>
-			<Card.Content class="pt-4">
-				<p class="text-muted-foreground mb-4">
+			<Card.Content class="flex h-full flex-col justify-between p-4 pb-0">
+				<p class="text-muted-foreground pb-4">
 					{item.description}
 				</p>
-				<div class="flex items-center justify-between">
+				<div class="flex items-end">
 					{#if item.underConstruction}
 						<Button onclick={() => goto(item.link)} class="w-40" disabled={item.underConstruction}
 							>Coming Soon...</Button

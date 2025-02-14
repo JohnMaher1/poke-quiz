@@ -40,7 +40,7 @@
 
 	let selectedPokedexName = $state<string | undefined>(undefined);
 
-	$effect.root(() => {
+	$effect(() => {
 		if (pokedexNames) {
 			selectedPokedexName = getRandomPokedex(pokedexNames);
 		}
@@ -121,7 +121,7 @@
 		</div>
 	{:else}
 		<div>
-			Pokedex: <span class="font-bold"> {toPascalCase(selectedPokedexName!)}</span>
+			Pokedex: <span class="font-bold"> {toPascalCase(selectedPokedexName ?? '')}</span>
 		</div>
 		<div>
 			{formattedTextEntry}
