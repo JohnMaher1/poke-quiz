@@ -1,12 +1,13 @@
 @import 'tailwindcss';
 
 @theme {
-	--color-primary: #e6e6e6;
+	--color-primary: #c4bebe;
+	--color-primary-bright: #e3e2e2;
 	--color-primary-foreground: #08090a;
 	--color-secondary: #323237;
-	--color-background: #08090a;
-	--color-nav: #090909;
-	--color-nav-separator: #202122;
+	--color-background: #15171a;
+	--color-nav: #111215;
+	--color-nav-separator: #242627;
 	--color-card: #0f1011;
 	--color-card-border: #202122;
 	--color-muted: #6c6c6c;
@@ -14,4 +15,51 @@
 	--color-destructive: #cc0000;
 	--color-selection: #131618;
 	--color-selection-foreground: #5b68cd;
+}
+
+body {
+	color: var(--color-primary);
+}
+
+._color-primary-bright {
+	color: #e3e2e2;
+}
+._color-primary {
+	color: #c4bebe;
+}
+._color-primary-foreground {
+	color: #08090a;
+}
+._color-secondary {
+	color: #323237;
+}
+._color-background {
+	color: #15171a;
+}
+._color-nav {
+	color: #111215;
+}
+._color-nav-separator {
+	color: #242627;
+}
+._color-card {
+	color: #0f1011;
+}
+._color-card-border {
+	color: #202122;
+}
+._color-muted {
+	color: #6c6c6c;
+}
+._color-success {
+	color: #00994d;
+}
+._color-destructive {
+	color: #cc0000;
+}
+._color-selection {
+	color: #131618;
+}
+._color-selection-foreground {
+	color: #5b68cd;
 }

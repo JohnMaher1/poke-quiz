@@ -324,7 +324,7 @@
 										: correctMove
 											? 'success'
 											: 'destructive'}
-									class="w-full  {hasChosenCorrectMove &&
+									class="text-primary-bright w-full  {hasChosenCorrectMove &&
 										correctMove &&
 										'animate-bounce'} {hasChosenCorrectMove === undefined && 'pointer-events-none'}"
 									>{move.names.find((x) => x.language.name === locale)?.name ?? move.name}

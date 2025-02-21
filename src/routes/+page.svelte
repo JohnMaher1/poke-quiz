@@ -12,7 +12,7 @@
 	Test your Pokémon knowledge with some exciting quizzes and puzzles!
 </p>
 
-<div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
+<div class="mx-auto grid max-w-7xl grid-cols-1 gap-6 xl:grid-cols-3">
 	{#each navItems as item}
 		<Card.Root class="flex h-full flex-col pb-4">
 			<Card.Header class=" flex flex-row items-center text-2xl font-semibold">
